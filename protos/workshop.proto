@@ -1,0 +1,272 @@
+syntax = "proto3";
+
+package workshop;
+// Shop service
+service ShopService {
+    // Get all products
+    rpc GetProducts (Empty) returns (ProductResponse);
+    
+    // Add a new product
+    rpc AddNewProduct (NewProduct) returns (Product);
+
+    // Create a new order
+    rpc CreateOrder (ProductQuantity) returns (OrderResponse);
+
+    // Update an order
+    rpc UpdateOrder (OrderUpdateRequest) returns (UpdateOrderResponse);
+    
+    // Get order details by ID
+    rpc GetOrderByID (OrderRequest) returns (GetOrderResponse);
+
+    // Get a list of orders
+    rpc GetOrders (LimitOffset) returns (OrdersResponse);
+
+    // Return an order
+    rpc ReturnOrder (ReturnOrderRequest) returns (ReturnOrderResponse);
+
+    // Apply coupon to the order
+    rpc ApplyCoupon (ApplyCouponRequest) returns (ApplyCouponResponse);
+
+    // Get QR code for returning an order
+    rpc GetQRCode (Empty) returns (QRCode);
+
+    //Get All users 
+    rpc GetAllUsers (Empty) returns (Users);
+
+    //Get All Mechanics
+    rpc GetAllMechanics (Empty) returns (Mechanics);
+
+    //Contact Mechanic
+    rpc ContactMechanic (ContactMechanicRequest) returns (ContactMechanicResponse);
+
+    //Create and assign a Service Report 
+    rpc CreateServiceReport (CreateServiceReportRequest) returns (CreateServiceReportResponse);
+
+    //SignUp Mechanic
+    rpc MechanicSignUp (MechanicSignUpRequest) returns (Message);
+
+    //Service Requests for Mechanic
+    rpc ServiceRequests (LimitOffset) returns (ServiceRequestsResponse);
+
+    //Get Mechanic Report by id 
+    rpc GetMechanicReportById (MechanicReportByIdRequest) returns (MechanicReport);
+}
+
+message Message{
+    string message = 1;
+}
+
+// Define the Product message
+message Product {
+    int32 id = 1;
+    string name = 2;
+    string price = 3;
+    string image_url = 4;
+}
+
+
+// Define the response for getting products
+message ProductResponse {
+    double credit = 1;
+    repeated Product products = 2;
+    int32 count = 3;
+    int32 previous_offset = 4;
+    int32 next_offset = 5;
+}
+
+// Define NewProduct message for adding a new product
+message NewProduct {
+    string name = 1;
+    int32 price = 2;
+    string image_url = 3;
+}
+
+// Product Quantity for creating and updating orders
+message ProductQuantity {
+    int32 product_id = 1;
+    int32 quantity = 2;
+}
+
+// Order details
+message Order {
+    int32 id = 1;
+    string status = 2;
+    string created_on = 3;
+    Product product = 4;
+    int32 quantity = 5;
+    User user = 6;
+    string transaction_id = 7;
+}
+
+// Order Response to return after creating or updating an order
+message OrderResponse {
+    int32 id = 1;
+    string message = 2;
+    double credit = 3;
+}
+
+message UpdateOrderResponse {
+    Order orders = 1;
+}
+// Order Update Request for updating orders
+message OrderUpdateRequest {
+    int32 order_id = 1;
+    string status = 2;
+    int32 quantity = 3;
+}
+
+// Orders Request for getting a list of orders with pagination
+message LimitOffset {
+    int32 limit = 1;
+    int32 offset = 2;
+}
+
+// Orders Response that returns a list of orders
+message OrdersResponse {
+    repeated Order orders = 1;
+    int32 count = 2;
+    int32 previous_offset = 3;
+    int32 next_offset = 4;
+}
+
+// Apply Coupon Request and Response
+message ApplyCouponRequest {
+    string coupon_code = 1;
+    double amount = 2;
+}
+
+message ApplyCouponResponse {
+    string message = 1;
+    double credit = 2;
+}
+
+// Return Order Request with order_id for returning an order
+message ReturnOrderRequest {
+    int32 order_id = 1;
+}
+
+message ReturnOrderResponse {
+    string message = 1;
+    string qr_code_url = 2;
+    Order order = 3;
+}
+
+// QRCode message for getting a return QR code URL
+message QRCode {
+    string description = 1;
+}
+
+// Empty message for queries without parameters
+message Empty {}
+
+
+
+// Order Request to get an order by ID
+message OrderRequest {
+    int32 order_id = 1;
+}
+
+message User {
+    string email = 1;  // User's email address
+    string number = 2; // User's phone number
+}
+
+message Payment {
+    string transaction_id = 1;    // Unique ID for the transaction
+    int32 order_id = 2;           // Associated order ID
+    double amount = 3;             // Payment amount
+    string paid_on = 4;           // Timestamp when the payment was made
+    string card_number = 5;       // Masked card number
+    string card_owner_name = 6;   // Name of the card owner
+    string card_type = 7;         // Card type (e.g., Visa, Mastercard)
+    string card_expiry = 8;       // Card expiry date (MM/YYYY)
+    string currency = 9;          // Payment currency (e.g., USD, EUR)
+}
+
+message GetOrderResponse{
+    Order order = 1;
+    Payment payment = 2;
+}
+
+message UserWithCredit {
+    User user = 1;
+    double available_credit = 2;
+}
+
+message Users{
+    repeated UserWithCredit users = 1;
+}
+
+message Mechanic{
+    int32 id = 1;
+    string mechanic_code = 2;
+    User user = 3;
+}
+
+message Mechanics{
+    repeated Mechanic mechanics = 1;
+}
+
+message ContactMechanicRequest{
+    int32 number_of_repeats = 1;
+    string mechanic_api = 2;
+    string vin = 3;
+    bool repeat_request_if_failed = 4;
+    string problem_details = 5;
+    string mechanic_code = 6;
+}
+
+message ContactMechanicResponse{
+    int32 id = 1;
+    bool sent = 2;
+    string report_link = 3;
+}
+
+message CreateServiceReportRequest{
+    string mechanic_code = 1;
+    string problem_details = 2;
+    string vin = 3;
+}
+
+message CreateServiceReportResponse{
+    int32 id = 1;
+    bool sent = 2;
+    string report_link = 3;
+}
+
+message MechanicSignUpRequest{
+    string name = 1;
+    string email = 2;
+    string number = 3;
+    string password = 4;
+    string mechanic_code = 5;
+}
+
+message ServiceRequestsResponse{
+    string message = 1;
+}
+
+message MechanicReport{
+    int32 id = 1;
+    Mechanic mechanic = 2;
+    Vehicle vehicle = 3;
+    string problem_details = 4;
+    string status = 5;
+    string created_on = 6;
+    string updated_on = 7;
+}
+
+message MechanicReportByIdRequest{
+    int32 id = 1;
+}
+
+message Vehicle{
+    int32 id = 1;
+    string vin = 2;
+    Owner owner = 3;
+}
+
+message Owner{
+    string email = 1;
+    string number = 2;
+}

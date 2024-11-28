@@ -1,0 +1,295 @@
+syntax = "proto3";
+
+package identity;
+
+service IdentityService {
+    // Signup
+    rpc Signup(SignupRequest) returns (SignupResponse);
+    
+    // Login
+    rpc Login(LoginRequest) returns (LoginResponse);
+    
+    // Forgot Password
+    rpc ForgotPassword(ForgotPasswordRequest) returns (ForgotPasswordResponse);
+    
+    // Check OTP
+    rpc CheckOTPv3(CheckOTPRequest) returns (CheckOTPResponse);
+    rpc CheckOTPv2(CheckOTPRequest) returns (CheckOTPResponse);
+    
+    
+    // Change Email
+    rpc ChangeEmail(ChangeEmailRequest) returns (ChangeEmailResponse);
+    
+    // Verify Email Token
+    rpc VerifyEmailToken(VerifyEmailTokenRequest) returns (VerifyEmailTokenResponse);
+
+    rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+
+    rpc LoginWithTokenv2(LoginWithTokenRequest) returns (LoginResponse);
+
+    rpc LoginWithTokenv4(LoginWithTokenRequest) returns (LoginResponse);
+
+    rpc GetDashboard(GetDashboardRequest) returns (GetDashboardResponse);
+
+    rpc UpdateProfilePic(UpdateProfilePicRequest) returns (UpdateProfilePicResponse);
+
+    rpc UploadProfileVideo(UploadProfileVideoRequest) returns (ProfileVideo);
+
+    rpc GetProfileVideo(GetProfileVideoRequest) returns (ProfileVideo);
+    
+    rpc UpdateProfileVideo(UpdateProfileVideoRequest) returns (ProfileVideo);
+
+    rpc DeleteProfileVideo(GetProfileVideoRequest) returns (DeleteResponse);
+
+    rpc ConvertProfileVideo(ConvertProfileVideoRequest) returns (ConvertProfileVideoResponse);
+
+    rpc AdminDeleteProfileVideo(AdminDeleteProfileVideoRequest) returns (CRAPIResponse);
+
+    rpc GetUserVehicles(GetUserVehiclesRequest) returns (GetUserVehiclesResponse);
+
+    rpc AddVehicle(AddVehicleRequest) returns (CRAPIResponse);
+
+    rpc GetVehicleLocation(GetVehicleLocationRequest) returns (GetVehicleLocationResponse);
+
+    rpc ResendVehicleDetailsEmail(ResendVehicleDetailsEmailRequest) returns (CRAPIResponse);
+
+}
+
+// Signup Request and Response
+message SignupRequest {
+    string email = 1;
+    string name = 2;
+    string number = 3;
+    string password = 4;
+}
+
+message SignupResponse {
+    string message = 1;
+}
+
+// Login Request and Response
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    string token = 1;
+    string message = 2;
+    string type = 3;
+    bool mfaRequired = 4;
+}
+
+// Forgot Password Request and Response
+message ForgotPasswordRequest {
+    string email = 1;
+}
+
+message ForgotPasswordResponse {
+    string message = 1;
+}
+
+// Check OTP Request and Response
+message CheckOTPRequest {
+    string otp = 1;
+    string email = 2;
+    string password = 3;
+}
+
+message CheckOTPResponse {
+    string message = 1;
+}
+
+
+
+// Verify Email Token Request and Response
+message VerifyEmailTokenRequest {
+    string old_email = 1;  // The current email address
+    string new_email = 2;  // The new email address
+    string token = 3;      // Token for verification
+}
+
+message VerifyEmailTokenResponse {
+    string message = 1;    // Response message (success or error)
+}
+
+
+
+
+// Login with Email Token Request and Response
+message LoginWithTokenRequest {
+    string email = 1;       // User's email address
+    string token = 2;       // Email token for login
+}
+
+
+
+
+// Reset Password Request and Response
+message ResetPasswordRequest {
+    string email = 1;       // User's email address
+    string password = 2;    // New password
+}
+
+message ResetPasswordResponse {
+    string message = 1;
+    int32 status = 2;
+}
+
+
+message ChangeEmailRequest {
+    string new_email = 1;  // The new email address
+    string old_email = 2;  // The existing email address
+}
+
+message ChangeEmailResponse {
+    string message = 1;    // Response message (success or error)
+}
+
+message GetDashboardRequest {
+}
+
+message GetDashboardResponse {
+    int32 id = 1;                // User ID
+    string name = 2;             // User name
+    string email = 3;            // User email
+    string number = 4;           // User phone number
+    string role = 5;             // User role
+    float available_credit = 6;  // User's available credit
+    int32 video_id = 7;          // Video ID
+    string video_name = 8;       // Video name
+    string video_url = 9;        // Video URL
+    string picture_url = 10;     // Picture URL
+}
+// Update Profile Picture Request and Response
+message UpdateProfilePicRequest {
+    bytes file = 1;       // Binary file data for the profile picture
+}
+
+message UpdateProfilePicResponse {
+    int32 id = 1;                // User ID
+    string name = 2;             // User name
+    string picture = 3;          // URL of the updated profile picture
+    string status = 4;           // Status message
+    float available_credit = 5;  // User's available credit
+    string user = 6;             // Additional user data (if needed)
+}
+
+// Upload Profile Video Request and Response
+message UploadProfileVideoRequest {
+    bytes file = 1;       // Binary file data for the profile video
+    
+}
+
+
+
+
+// Get Profile Video Request and Response
+message GetProfileVideoRequest {
+    int64 video_id = 1;   // Video ID for the profile video
+}
+
+message ProfileVideo {
+    int32 id = 1;                // User ID
+    string video_name = 2;
+    string conversion_params = 3;
+    string profileVideo = 4;
+}
+
+message DeleteResponse {
+    string message = 1;  // Response message
+}
+
+// Update Profile Video Request
+message UpdateProfileVideoRequest {
+    int64 video_id = 1;   // Video ID for the profile video
+    string video_name = 2;  // New video name or URL
+}
+
+// Convert Profile Video Request and Response
+message ConvertProfileVideoRequest {
+    int64 video_id = 1;   // Video ID for the profile video
+}
+
+message ConvertProfileVideoResponse {
+    string status = 1;     // Status message (success or error)
+    string video_url = 2;  // Converted video URL
+}
+
+
+// Admin Delete Profile Video Request and Response
+message AdminDeleteProfileVideoRequest {
+    int64 video_id = 1;   // Video ID for deletion
+}
+
+message CRAPIResponse {
+    string message = 1;  // Response message
+}
+
+
+// Get User Vehicles Request and Response
+message GetUserVehiclesRequest {
+}
+
+message VehicleCompany {
+    int32 id = 1;         // Company ID
+    string name = 2;      // Company name
+}
+
+message VehicleModel {
+    int32 id = 1;         // Model ID
+    string model = 2;     // Model name
+    string fuel_type = 3; // Fuel type (e.g., Petrol, Diesel, Electric)
+    string vehicle_img = 4; // Image URL of the vehicle
+    VehicleCompany vehiclecompany = 5; // Nested message for the vehicle company
+}
+
+
+
+message Vehicle {
+    int32 id = 1;             // Vehicle ID
+    string uuid = 2;          // Unique ID for the vehicle
+    string pincode = 3;       // Pincode for the vehicle's location
+    string vin = 4;           // Vehicle Identification Number (VIN)
+    int32 year = 5;           // Year of manufacture
+    string status = 6;        // Vehicle status (e.g., ACTIVE, INACTIVE)
+    repeated string previousOwners = 7; // List of previous owners (if any)
+    VehicleModel model = 8;   // Nested message for the vehicle model
+    VehicleLocation vehicleLocation = 9; // Nested message for vehicle location
+    string owner = 10;        // Owner of the vehicle (could be empty or null)
+}
+
+message GetUserVehiclesResponse {
+    repeated Vehicle items = 1;  // List of vehicles
+}
+
+
+// Add Vehicle Request and Response
+message AddVehicleRequest {
+    string pincode = 1;   // Pincode for the vehicle location
+    string vin = 2;       // VIN (Vehicle Identification Number)
+}
+
+
+// Get Vehicle Location Request and Response
+message GetVehicleLocationRequest {
+    string vehicleId = 1; // Vehicle ID
+}
+
+message VehicleLocation {
+    int32 id = 1;               // Vehicle location ID
+    string latitude = 2;        // Latitude of the vehicle
+    string longitude = 3;       // Longitude of the vehicle
+}
+
+message GetVehicleLocationResponse {
+    string carId = 1;               // Car ID
+    string fullName = 2;            // Full name of the user
+    VehicleLocation vehicleLocation = 3; // Vehicle location
+    string email = 4;
+}
+
+
+// Resend Vehicle Details Email Request and Response
+message ResendVehicleDetailsEmailRequest {
+}

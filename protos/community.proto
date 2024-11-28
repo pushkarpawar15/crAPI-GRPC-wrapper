@@ -1,0 +1,123 @@
+syntax = "proto3";
+
+package community;
+service CommunityService {
+    rpc GetPost(GetPostRequest) returns (Post);
+
+    rpc CreatePost(CreatePostRequest) returns (CreatePostResponse);
+
+    rpc PostComment(PostCommentRequest) returns (PostWithComments);
+
+    rpc GetRecentPosts(GetRecentPostsRequest) returns (RecentPostsResponse);
+
+    rpc AddNewCoupon(AddCouponRequest) returns (AddCouponResponse);
+
+    rpc ValidateCoupon(ValidateCouponRequest) returns (ValidateCouponResponse);
+
+
+}
+
+message GetPostRequest {
+    string postId = 2;    // Post ID
+}
+
+message PostAuthor {
+    string created_at = 1;       // Author's creation timestamp
+    string email = 2;            // Author's email
+    string nickname = 3;         // Author's nickname
+    string profile_pic_url = 4;  // URL of the author's profile picture
+    string vehicleid = 5;        // Vehicle ID associated with the author
+}
+
+message Post {
+    string id = 1;                // Post ID
+    int32 authorid = 2;           // Author ID
+    string content = 3;           // Content of the post
+    string CreatedAt = 4;         // Post creation timestamp
+    string title = 5;             // Title of the post
+    repeated Comment comments = 6; // Comments on the post
+    PostAuthor author = 7;        // Author information
+}
+
+// Create Post Request and Response
+message CreatePostRequest {
+    string title = 2;     // Title of the post
+    string content = 3;   // Content of the post
+}
+
+message CreatePostResponse {
+    string id = 1;                // Post ID
+    int32 authorid = 2;           // Author ID
+    string content = 3;           // Content of the post
+    string CreatedAt = 4;         // Post creation timestamp
+    string title = 5;             // Title of the post
+    repeated Comment comments = 6; // Comments on the post
+    PostAuthor author = 7;        // Author information
+}
+
+// Post Comment Request and Response
+message PostCommentRequest {
+    string postId = 2;    // Post ID to add the comment to
+    string content = 3;   // Comment content
+}
+
+message CommentAuthor {
+    string created_at = 1;       // Author's creation timestamp
+    string email = 2;            // Author's email
+    string nickname = 3;         // Author's nickname
+    string profile_pic_url = 4;  // URL of the author's profile picture
+    string vehicleid = 5;        // Vehicle ID associated with the author
+}
+
+message Comment {
+    string id = 1;             // Comment ID
+    string content = 2;        // Comment content
+    string CreatedAt = 3;      // Comment creation timestamp
+    CommentAuthor author = 4;  // Author information
+}
+
+message PostWithComments {
+    string id = 1;                // Post ID
+    int32 authorid = 2;           // Author ID
+    string content = 3;           // Post content
+    string CreatedAt = 4;         // Post creation timestamp
+    string title = 5;             // Post title
+    repeated Comment comments = 6; // Comments on the post
+    CommentAuthor author = 7;     // Post author's information
+}
+
+// Get Recent Posts Request and Response
+message GetRecentPostsRequest {
+    int32 limit = 2;      // Limit the number of posts
+    int32 offset = 3;     // Offset for pagination
+}
+
+message RecentPostsResponse {
+    repeated Post posts = 1;  // List of recent posts
+    int32 next_offset = 2;
+    int32 previous_offset = 3;
+    int32 total = 4;
+}
+
+// Add New Coupon Request and Response
+message AddCouponRequest {
+    string coupon_code = 2;   // Coupon code
+    string description = 3;  // Description of the coupon
+    int32 discount = 4;      // Discount percentage
+    string expiryDate = 5;   // Expiry date of the coupon
+}
+
+message AddCouponResponse {
+    string message = 1;
+}
+
+// Validate Coupon Request and Response
+message ValidateCouponRequest {
+    string coupon_code = 2;  // Coupon code to validate
+}
+
+message ValidateCouponResponse {
+    string coupon_code = 1;  // Coupon code to validate
+    string amount = 2;  
+    string CreatedAt = 3;
+}
