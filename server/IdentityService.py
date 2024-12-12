@@ -255,7 +255,7 @@ class IdentityService(identity_pb2_grpc.IdentityServiceServicer):
         """Update user profile video"""
         update_profile_video_url = f"{CRAPI_BASE_URL}/identity/api/v2/user/videos/{request.video_id}"
         payload = {
-            "video_name": request.video_name,  # Assuming video name can be updated
+            "videoName": request.video_name,  # Assuming video name can be updated
         }
         jwt_token = extract_jwt_from_context(context)
 
