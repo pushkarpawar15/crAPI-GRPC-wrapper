@@ -18,7 +18,7 @@ service CommunityService {
 }
 
 message GetPostRequest {
-    string postId = 2;    // Post ID
+    string postId = 1;    // Post ID
 }
 
 message PostAuthor {
